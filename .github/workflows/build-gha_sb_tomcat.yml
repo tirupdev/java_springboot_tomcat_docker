@@ -26,3 +26,15 @@ jobs:
 
       - name: List WAR file
         run: ls -lh target/*.war
+        
+       - name: Deploy WAR to Tomcat
+        env:
+          WAR_FILE: target/*.war
+          TOMCAT_USER: ${{ secrets.TOMCAT_USER }}
+          TOMCAT_PASS: ${{ secrets.TOMCAT_PASS }}
+          TOMCAT_HOST: ${{ secrets.TOMCAT_HOST }} # e.g. http://40.192.18.233:8080
+        run: |
+          curl -u $TOMCAT_USER:$TOMCAT_PASS \
+            --upload-file $WAR_FILE \
+            "$TOMCAT_HOST/manager/text/deploy?path=/tirup-app&update=true" 
+
